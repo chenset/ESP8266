@@ -22,7 +22,7 @@ const int sleepTimeS = 590;
 
 // Host
 const char* host = "10.0.0.2";
-const int httpPort = 80;
+const int httpPort = 88;
 const char* url = "/sensor/upload";
 
 // sensors json
