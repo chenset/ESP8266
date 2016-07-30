@@ -2,6 +2,9 @@
 #include <ESP8266WiFi.h>
 #include "DHT.h"
 
+// Chip name
+String chipName = "two";
+
 // DHT sensor settings
 #define DHTPIN 2     // what digital pin we're connected to
 #define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
@@ -15,13 +18,14 @@ const char* ssid = "deny-2.4G";
 const char* password = "960902463";
 
 // Time to sleep (in seconds):
-const int sleepTimeS = 10;
+const int sleepTimeS = 590;
 
 // Host
-const char* host = "10.0.0.120";
-const int httpPort = 8234;
-const char* url = "/upload";
+const char* host = "10.0.0.2";
+const int httpPort = 80;
+const char* url = "/sensor/upload";
 
+// sensors json
 String getSensorsJson(){
     float h = dht.readHumidity();
     float t = dht.readTemperature();
@@ -36,7 +40,9 @@ String getSensorsJson(){
     res += (String)t;
     res += ",\"humidity\": ";
     res += (String)h;
-    res += "}";
+    res += ",\"chip\": \"";
+    res += chipName;
+    res += "\"}";
 
     return res;
 }
@@ -78,12 +84,16 @@ void loop()
   }
   
   // This will send the request to the server
-  client.print(String("GET ")+String(url) + " HTTP/1.1\r\n" +
-               "Host: " + host + "\r\n" + 
-               getSensorsJson() +
-               "\r\n\r\n");
+  String jsonStr = getSensorsJson();
+  String httpBody = String("POST ")+String(url) + " HTTP/1.1\r\n" 
+    +"Host: " + host + "\r\n"
+    +"Content-Length: "+jsonStr.length()+"\r\n\r\n" 
+    + jsonStr;
+
+  Serial.println("--"+httpBody+"--");
+  client.print(httpBody);
   delay(10);
-  
+
   // Read all the lines of the reply from server and print them to Serial
   while(client.available()){
     String line = client.readStringUntil('\r');
