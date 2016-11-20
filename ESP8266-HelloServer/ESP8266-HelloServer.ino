@@ -5,7 +5,7 @@
 #include "DHT.h"
 
 const char* ssid = "deny-2.4G";
-const char* password = "960902463";
+const char* password = "";
 
 ESP8266WebServer server(80);
 
