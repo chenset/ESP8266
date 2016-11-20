@@ -15,7 +15,7 @@ const int baud = 115200;
 
 // WiFi 
 const char* ssid = "deny-2.4G";
-const char* password = "960902463";
+const char* password = "";
 
 // Time to sleep (in seconds):
 const int sleepTimeS = 590;
